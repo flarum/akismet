@@ -22,8 +22,9 @@ class AddClientAssets
     public function subscribe(Dispatcher $events)
     {
         $events->listen(Rendering::class, [$this, 'addAssets']);
-    }
     
+    }
+
     public function addAssets(Rendering $event)
     {
         if ($event->isForum()) {
