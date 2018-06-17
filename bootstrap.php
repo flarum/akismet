@@ -15,10 +15,10 @@ use Illuminate\Contracts\Events\Dispatcher;
 
 return [
     (new Extend\Assets('forum'))
-        ->js(__DIR__.'/js/forum/dist/main.js'),
+        ->js(__DIR__.'/js/dist/forum.js'),
 
     (new Extend\Assets('admin'))
-        ->js(__DIR__.'/js/admin/dist/main.js'),
+        ->js(__DIR__.'/js/dist/admin.js'),
 
     function (Dispatcher $events) {
         $events->subscribe(Listener\FilterNewPosts::class);
