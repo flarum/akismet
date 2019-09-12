@@ -31,7 +31,7 @@ class ValidatePost
     {
         $post = $event->post;
 
-        if ($post->exists || $post->user->groups()->count()) {
+        if ($post->exists || $post->user->comment_count > 3) {
             return;
         }
 
