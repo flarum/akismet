@@ -9,9 +9,9 @@
 
 namespace Flarum\Akismet\Listener;
 
+use Flarum\Akismet\Akismet;
 use Flarum\Flags\Flag;
 use Flarum\Post\Event\Saving;
-use TijsVerkoyen\Akismet\Akismet;
 
 class ValidatePost
 {
@@ -33,15 +33,15 @@ class ValidatePost
             return;
         }
 
-        $isSpam = $this->akismet->isSpam(
-            $post->content,
-            $post->user->username,
-            $post->user->email,
-            null,
-            'comment'
-        );
+        $this->akismet->setContent($post->content);
+        $this->akismet->setAuthorName($post->user->username);
+        $this->akismet->setAuthorEmail($post->user->email);
+        $this->akismet->setType($post->number === 1 ? 'forum-post' : 'reply');
+        $this->akismet->setIp($post->ip_address);
+        //TODO
+        //$this->akismet->setUserAgent(Arr::get($this->request->getServerParams(), 'HTTP_USER_AGENT'));
 
-        if ($isSpam) {
+        if ($this->akismet->isSpam()) {
             $post->is_approved = false;
             $post->is_spam = true;
 

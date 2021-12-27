@@ -9,8 +9,8 @@
 
 namespace Flarum\Akismet\Listener;
 
+use Flarum\Akismet\Akismet;
 use Flarum\Post\Event\Hidden;
-use TijsVerkoyen\Akismet\Akismet;
 
 class SubmitSpam
 {
@@ -29,13 +29,13 @@ class SubmitSpam
         $post = $event->post;
 
         if ($post->is_spam) {
-            $this->akismet->submitSpam(
-                $post->ip_address,
-                null,
-                $post->content,
-                $post->user->username,
-                $post->user->email
-            );
+            $this->akismet->setContent($post->content);
+            $this->akismet->setIp($post->ip_address);
+            $this->akismet->setAuthorName($post->user->username);
+            $this->akismet->setAuthorEmail($post->user->email);
+            $this->akismet->setType($post->number === 1 ? 'forum-post' : 'reply');
+
+            $this->akismet->submitSpam();
         }
     }
 }
