@@ -19,10 +19,14 @@ class Akismet
 
     private $params = [];
 
-    public function __construct(string $apiKey, string $homeUrl)
+    public function __construct(string $apiKey, string $homeUrl, $inDebugMode = false)
     {
         $this->apiUrl = "https://$apiKey.rest.akismet.com/1.1";
         $this->setBlog($homeUrl);
+
+        if ($inDebugMode) {
+            $this->setTest();
+        }
     }
 
     /**
@@ -31,10 +35,6 @@ class Akismet
      */
     public function sendRequest(string $type): ResponseInterface
     {
-        //TODO if debug mode
-        $this->setTest();
-
-        var_dump($this->params);
         $client = new Client();
         return $client->request('POST', "$this->apiUrl/$type", ['body' => $this->params]);
     }
