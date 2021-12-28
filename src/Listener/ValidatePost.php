@@ -33,12 +33,13 @@ class ValidatePost
             return;
         }
 
-        $this->akismet->setContent($post->content);
-        $this->akismet->setAuthorName($post->user->username);
-        $this->akismet->setAuthorEmail($post->user->email);
-        $this->akismet->setType($post->number === 1 ? 'forum-post' : 'reply');
-        $this->akismet->setIp($post->ip_address);
-        $this->akismet->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+        $this->akismet
+            ->setContent($post->content)
+            ->setAuthorName($post->user->username)
+            ->setAuthorEmail($post->user->email)
+            ->setType($post->number === 1 ? 'forum-post' : 'reply')
+            ->setIp($post->ip_address)
+            ->setUserAgent($_SERVER['HTTP_USER_AGENT']);
 
         if ($this->akismet->isSpam()) {
             $post->is_approved = false;

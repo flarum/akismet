@@ -29,11 +29,12 @@ class SubmitHam
         $post = $event->post;
 
         if ($post->is_spam) {
-            $this->akismet->setContent($post->content);
-            $this->akismet->setIp($post->ip_address);
-            $this->akismet->setAuthorName($post->user->username);
-            $this->akismet->setAuthorEmail($post->user->email);
-            $this->akismet->setType($post->number === 1 ? 'forum-post' : 'reply');
+            $this->akismet
+                ->setContent($post->content)
+                ->setIp($post->ip_address)
+                ->setAuthorName($post->user->username)
+                ->setAuthorEmail($post->user->email)
+                ->setType($post->number === 1 ? 'forum-post' : 'reply');
 
             $this->akismet->submitHam();
         }
