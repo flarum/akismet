@@ -108,6 +108,15 @@ class Akismet
     }
 
     /**
+     * The content of the HTTP_REFERER header should be sent here.
+     */
+    public function setReferrer(string $referrer): Akismet
+    {
+        $this->params['referrer'] = $referrer;
+        return $this;
+    }
+
+    /**
      * The full permanent URL of the entry the comment was submitted to.
      */
     public function setPermalink(string $permalink): Akismet
@@ -126,6 +135,7 @@ class Akismet
      * contact-form: A contact form or feedback form submission.
      * signup: A new user account.
      * message: A message sent between just a few users.
+     * You may send a value not listed above if none of them accurately describe your content. This is further explained here: https://blog.akismet.com/2012/06/19/pro-tip-tell-us-your-comment_type/
      */
     public function setType(string $type): Akismet
     {
@@ -170,6 +180,24 @@ class Akismet
     }
 
     /**
+     * The UTC timestamp of the creation of the comment, in ISO 8601 format. May be omitted for comment-check requests if the comment is sent to the API at the time it is created.
+     */
+    public function setDateGmt(string $date): Akismet
+    {
+        $this->params['comment_date_gmt'] = $date;
+        return $this;
+    }
+
+    /**
+     * The UTC timestamp of the publication time for the post, page or thread on which the comment was posted.
+     */
+    public function setPostModifiedDateGtm(string $date): Akismet
+    {
+        $this->params['comment_post_modified_gmt'] = $date;
+        return $this;
+    }
+
+    /**
      * Indicates the language(s) in use on the blog or site, in ISO 639-1 format, comma-separated. A site with articles in English and French might use “en, fr_ca”.
      */
     public function setLanguage(string $language): Akismet
@@ -187,7 +215,19 @@ class Akismet
         return $this;
     }
 
+    /**
+     * If you are sending content to Akismet to be rechecked, such as a post that has been edited or old pending comments that you’d like to recheck, include the parameter recheck_reason with a string describing why the content is being rechecked. For example, recheck_reason=edit.
+     */
+    public function setRecheckReason(string $reason): Akismet
+    {
+        $this->params['recheck_reason'] = $reason;
+        return $this;
+    }
 
+
+    /**
+     * Allows you to set additional parameters
+     */
     public function setParams(array $params): Akismet
     {
         if (!empty($params)) {
