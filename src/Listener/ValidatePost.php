@@ -38,8 +38,7 @@ class ValidatePost
         $this->akismet->setAuthorEmail($post->user->email);
         $this->akismet->setType($post->number === 1 ? 'forum-post' : 'reply');
         $this->akismet->setIp($post->ip_address);
-        //TODO
-        //$this->akismet->setUserAgent(Arr::get($this->request->getServerParams(), 'HTTP_USER_AGENT'));
+        $this->akismet->setUserAgent($_SERVER['HTTP_USER_AGENT']);
 
         if ($this->akismet->isSpam()) {
             $post->is_approved = false;
