@@ -9,7 +9,9 @@
 
 namespace Flarum\Akismet\Provider;
 
+use Flarum\Extension\ExtensionManager;
 use Flarum\Foundation\AbstractServiceProvider;
+use Flarum\Foundation\Application;
 use Flarum\Foundation\Config;
 use Flarum\Http\UrlGenerator;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -26,11 +28,18 @@ class AkismetProvider extends AbstractServiceProvider
             $url = $this->container->make(UrlGenerator::class);
             /** @var Config $config */
             $config = $this->container->make(Config::class);
+            /** @var ExtensionManager $extensions */
+            $extensions = $this->container->make(ExtensionManager::class);
+            /** @var Application $app */
+            $app = $this->container->make(Application::class);
+
 
             return new Akismet(
                 $settings->get('flarum-akismet.api_key'),
                 $url->to('forum')->base(),
-                $config->inDebugMode()
+                $app::VERSION,
+                $extensions->getExtension('flarum-akismet')->getVersion(),
+                $config->inDebugMode(),
             );
         });
     }

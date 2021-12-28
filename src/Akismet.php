@@ -16,13 +16,18 @@ use Psr\Http\Message\ResponseInterface;
 class Akismet
 {
     private $apiUrl;
+    private $flarumVersion;
+    private $extensionVersion;
 
     private $params = [];
 
-    public function __construct(string $apiKey, string $homeUrl, $inDebugMode = false)
+    public function __construct(string $apiKey, string $homeUrl, $flarumVersion, $extensionVersion, $inDebugMode = false)
     {
         $this->apiUrl = "https://$apiKey.rest.akismet.com/1.1";
         $this->setBlog($homeUrl);
+
+        $this->flarumVersion = $flarumVersion;
+        $this->extensionVersion = $extensionVersion;
 
         if ($inDebugMode) {
             $this->setTest();
@@ -36,7 +41,12 @@ class Akismet
     public function sendRequest(string $type): ResponseInterface
     {
         $client = new Client();
-        return $client->request('POST', "$this->apiUrl/$type", ['body' => $this->params]);
+        return $client->request('POST', "$this->apiUrl/$type", [
+            'headers' => [
+                'User-Agent' => "Flarum/$this->flarumVersion | Akismet/$this->extensionVersion",
+            ],
+            'body'    => $this->params,
+        ]);
     }
 
     /**
