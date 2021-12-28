@@ -21,6 +21,7 @@ class Akismet
     private $extensionVersion;
 
     private $params = [];
+    public $proTip;
 
     public function __construct(string $apiKey, string $homeUrl, $flarumVersion, $extensionVersion, $inDebugMode = false)
     {
@@ -61,8 +62,11 @@ class Akismet
     {
         $response = $this->sendRequest('comment-check');
 
+        if ($response->hasHeader('X-akismet-pro-tip')) {
+            $this->proTip = $response->getHeaderLine('X-akismet-pro-tip');
+        }
+
         if ($response->getBody()->getContents() === 'true') {
-            //TODO handle X-akismet-pro-tip header
             return true;
         }
 
