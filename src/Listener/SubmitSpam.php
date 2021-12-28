@@ -26,6 +26,10 @@ class SubmitSpam
 
     public function handle(Hidden $event)
     {
+        if (!$this->akismet->isConfigured) {
+            return;
+        }
+
         $post = $event->post;
 
         if ($post->is_spam) {

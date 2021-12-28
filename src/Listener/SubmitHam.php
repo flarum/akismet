@@ -26,6 +26,10 @@ class SubmitHam
 
     public function handle(PostWasApproved $event)
     {
+        if (!$this->akismet->isConfigured) {
+            return;
+        }
+
         $post = $event->post;
 
         if ($post->is_spam) {

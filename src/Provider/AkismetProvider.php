@@ -39,7 +39,7 @@ class AkismetProvider extends AbstractServiceProvider
                 $url->to('forum')->base(),
                 $app::VERSION,
                 $extensions->getExtension('flarum-akismet')->getVersion(),
-                $config->inDebugMode(),
+                $config->inDebugMode()
             );
         });
     }

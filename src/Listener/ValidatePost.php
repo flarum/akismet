@@ -27,6 +27,11 @@ class ValidatePost
 
     public function handle(Saving $event)
     {
+        //If no API key is provided in the extension settings, then there is no point in validating the post.
+        if (!$this->akismet->isConfigured) {
+            return;
+        }
+
         $post = $event->post;
 
         if ($post->exists || $post->user->hasPermission('bypassAkismet')) {

@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Akismet
 {
+    public $isConfigured = true;
     private $apiUrl;
     private $flarumVersion;
     private $extensionVersion;
@@ -23,6 +24,10 @@ class Akismet
 
     public function __construct(string $apiKey, string $homeUrl, $flarumVersion, $extensionVersion, $inDebugMode = false)
     {
+        if (empty($apiKey)) {
+            return $this->isConfigured = false;
+        }
+
         $this->apiUrl = "https://$apiKey.rest.akismet.com/1.1";
         $this->setBlog($homeUrl);
 
@@ -216,7 +221,7 @@ class Akismet
     }
 
     /**
-     * If you are sending content to Akismet to be rechecked, such as a post that has been edited or old pending comments that you’d like to recheck, include the parameter recheck_reason with a string describing why the content is being rechecked. For example, recheck_reason=edit.
+     * If you are sending content to Akismet to be rechecked, such as a post that has been edited or old pending comments that you’d like to recheck, include the parameter recheck_reason with a string describing why the content is being rechecked. For example, edit.
      */
     public function setRecheckReason(string $reason): Akismet
     {
