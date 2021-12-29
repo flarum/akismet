@@ -29,8 +29,8 @@ class ValidatePost
 
     public function __construct(Akismet $akismet, SettingsRepositoryInterface $settings)
     {
-        $this->settings = $settings;
         $this->akismet = $akismet;
+        $this->settings = $settings;
     }
 
     public function handle(Saving $event)
