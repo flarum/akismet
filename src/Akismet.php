@@ -21,7 +21,6 @@ class Akismet
     private $extensionVersion;
 
     private $params = [];
-    public $proTip;
 
     public function __construct(string $apiKey, string $homeUrl, string $flarumVersion, string $extensionVersion, bool $inDebugMode = false)
     {
@@ -60,19 +59,14 @@ class Akismet
     /**
      * @throws GuzzleException
      */
-    public function isSpam(): bool
+    public function checkSpam(): array
     {
         $response = $this->sendRequest('comment-check');
 
-        if ($response->hasHeader('X-akismet-pro-tip')) {
-            $this->proTip = $response->getHeaderLine('X-akismet-pro-tip');
-        }
-
-        if ($response->getBody()->getContents() === 'true') {
-            return true;
-        }
-
-        return false;
+        return [
+            'isSpam' => $response->getBody()->getContents() === 'true',
+            'proTip' => $response->getHeaderLine('X-akismet-pro-tip'),
+        ];
     }
 
     /**

@@ -54,10 +54,12 @@ class ValidatePost
             ->setIp($post->ip_address)
             ->setUserAgent($_SERVER['HTTP_USER_AGENT']);
 
-        if ($this->akismet->isSpam()) {
+        $result = $this->akismet->checkSpam();
+
+        if ($result['isSpam']) {
             $post->is_spam = true;
 
-            if ($this->akismet->proTip === 'discard' && $this->settings->get('flarum-akismet.delete_blatant_spam')) {
+            if ($result['proTip'] === 'discard' && $this->settings->get('flarum-akismet.delete_blatant_spam')) {
                 $post->hide();
 
                 $post->afterSave(function ($post) {
