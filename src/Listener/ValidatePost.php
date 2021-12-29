@@ -9,8 +9,10 @@
 
 namespace Flarum\Akismet\Listener;
 
+use Carbon\Carbon;
 use Flarum\Akismet\Akismet;
 use Flarum\Flags\Flag;
+use Flarum\Post\CommentPost;
 use Flarum\Post\Event\Saving;
 use Flarum\Settings\SettingsRepositoryInterface;
 
@@ -33,15 +35,14 @@ class ValidatePost
 
     public function handle(Saving $event)
     {
-        //If no API key is provided in the extension settings, then there is no point in validating the post.
-        if (!$this->akismet->isConfigured) {
+        if (!$this->akismet->isConfigured()) {
             return;
         }
 
         $post = $event->post;
 
-        //TODO Sometimes someone posts spam when editing a post. In this 'recheck_reason=edit' can be used when sending a request to Akismet
-        if ($post->exists || $post->user->hasPermission('bypassAkismet')) {
+        //TODO Sometimes someone posts spam when editing a post. In this case 'recheck_reason=edit' can be used when sending a request to Akismet
+        if ($post->exists || !($post instanceof CommentPost) || $post->user->hasPermission('bypassAkismet')) {
             return;
         }
 
@@ -57,11 +58,11 @@ class ValidatePost
             $post->is_spam = true;
 
             if ($this->akismet->proTip === 'discard' && $this->settings->get('flarum-akismet.delete_blatant_spam')) {
-                $post->hidden_at = time();
+                $post->hide();
 
                 $post->afterSave(function ($post) {
                     if ($post->number == 1) {
-                        $post->discussion->hidden_at = time();
+                        $post->discussion->hide();
                     }
                 });
             } else {
@@ -77,7 +78,7 @@ class ValidatePost
 
                     $flag->post_id = $post->id;
                     $flag->type = 'akismet';
-                    $flag->created_at = time();
+                    $flag->created_at = Carbon::now();
 
                     $flag->save();
                 });

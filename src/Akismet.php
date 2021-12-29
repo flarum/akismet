@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Akismet
 {
-    public $isConfigured = true;
+    private $apiKey;
     private $apiUrl;
     private $flarumVersion;
     private $extensionVersion;
@@ -23,12 +23,9 @@ class Akismet
     private $params = [];
     public $proTip;
 
-    public function __construct(string $apiKey, string $homeUrl, $flarumVersion, $extensionVersion, $inDebugMode = false)
+    public function __construct(string $apiKey, string $homeUrl, string $flarumVersion, string $extensionVersion, bool $inDebugMode = false)
     {
-        if (empty($apiKey)) {
-            return $this->isConfigured = false;
-        }
-
+        $this->apiKey = $apiKey;
         $this->apiUrl = "https://$apiKey.rest.akismet.com/1.1";
         $this->setBlog($homeUrl);
 
@@ -40,11 +37,16 @@ class Akismet
         }
     }
 
+    public function isConfigured(): bool
+    {
+        return !empty($this->apiKey);
+    }
+
     /**
-     * @param  string  $type  eg. submit-spam, submit-spam or submit-ham;
+     * @param  string  $type  e.g. comment-check, submit-spam or submit-ham;
      * @throws GuzzleException
      */
-    public function sendRequest(string $type): ResponseInterface
+    protected function sendRequest(string $type): ResponseInterface
     {
         $client = new Client();
         return $client->request('POST', "$this->apiUrl/$type", [
