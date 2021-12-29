@@ -16,23 +16,23 @@ use Flarum\Foundation\Config;
 use Flarum\Http\UrlGenerator;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Akismet\Akismet;
+use Illuminate\Container\Container;
 
 class AkismetProvider extends AbstractServiceProvider
 {
     public function register()
     {
-        $this->container->bind(Akismet::class, function () {
+        $this->container->bind(Akismet::class, function (Container $container) {
             /** @var SettingsRepositoryInterface $settings */
-            $settings = $this->container->make(SettingsRepositoryInterface::class);
+            $settings = $container->make(SettingsRepositoryInterface::class);
             /** @var UrlGenerator $url */
-            $url = $this->container->make(UrlGenerator::class);
+            $url = $container->make(UrlGenerator::class);
             /** @var Config $config */
-            $config = $this->container->make(Config::class);
+            $config = $container->make(Config::class);
             /** @var ExtensionManager $extensions */
             $extensions = $this->container->make(ExtensionManager::class);
             /** @var Application $app */
-            $app = $this->container->make(Application::class);
-
+            $app = $container->make(Application::class);
 
             return new Akismet(
                 $settings->get('flarum-akismet.api_key'),
