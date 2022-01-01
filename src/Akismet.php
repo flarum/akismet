@@ -88,7 +88,7 @@ class Akismet
     /**
      * Allows you to set additional parameter
      */
-    private function witParam(string $key, $value): Akismet
+    public function witParam(string $key, $value): Akismet
     {
         $new = clone $this;
         $new->params[$key] = $value;
