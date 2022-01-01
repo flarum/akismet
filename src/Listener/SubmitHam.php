@@ -34,13 +34,12 @@ class SubmitHam
 
         if ($post->is_spam) {
             $this->akismet
-                ->setContent($post->content)
-                ->setIp($post->ip_address)
-                ->setAuthorName($post->user->username)
-                ->setAuthorEmail($post->user->email)
-                ->setType($post->number === 1 ? 'forum-post' : 'reply');
-
-            $this->akismet->submitHam();
+                ->withContent($post->content)
+                ->withIp($post->ip_address)
+                ->withAuthorName($post->user->username)
+                ->withAuthorEmail($post->user->email)
+                ->withType($post->number === 1 ? 'forum-post' : 'reply')
+                ->submitHam();
         }
     }
 }

@@ -26,13 +26,13 @@ class Akismet
     {
         $this->apiKey = $apiKey;
         $this->apiUrl = "https://$apiKey.rest.akismet.com/1.1";
-        $this->setBlog($homeUrl);
+        $this->params['blog'] = $homeUrl;
 
         $this->flarumVersion = $flarumVersion;
         $this->extensionVersion = $extensionVersion;
 
         if ($inDebugMode) {
-            $this->setTest();
+            $this->params['is_test'] = true;
         }
     }
 
@@ -85,49 +85,52 @@ class Akismet
         $this->sendRequest('submit-ham');
     }
 
+    private function getImmutableWithParam(string $key, $value): Akismet
+    {
+        $clone = $this;
+        $clone->params[$key] = $value;
+
+        return $clone;
+    }
+
     /**
      * The front page or home URL of the instance making the request. For a blog or wiki this would be the front page. Note: Must be a full URI, including http://.
      */
-    public function setBlog(string $url): Akismet
+    public function withBlog(string $url): Akismet
     {
-        $this->params['blog'] = $url;
-        return $this;
+        return $this->getImmutableWithParam('blog', $url);
     }
 
     /**
      * IP address of the comment submitter.
      */
-    public function setIp(string $ip): Akismet
+    public function withIp(string $ip): Akismet
     {
-        $this->params['user_ip'] = $ip;
-        return $this;
+        return $this->getImmutableWithParam('user_ip', $ip);
     }
 
     /**
      * User agent string of the web browser submitting the comment - typically the HTTP_USER_AGENT cgi variable. Not to be confused with the user agent of your Akismet library.
      */
-    public function setUserAgent(string $userAgent): Akismet
+    public function withUserAgent(string $userAgent): Akismet
     {
-        $this->params['user_agent'] = $userAgent;
-        return $this;
+        return $this->getImmutableWithParam('user_agent', $userAgent);
     }
 
     /**
      * The content of the HTTP_REFERER header should be sent here.
      */
-    public function setReferrer(string $referrer): Akismet
+    public function withReferrer(string $referrer): Akismet
     {
-        $this->params['referrer'] = $referrer;
-        return $this;
+        return $this->getImmutableWithParam('referrer', $referrer);
     }
 
     /**
      * The full permanent URL of the entry the comment was submitted to.
      */
-    public function setPermalink(string $permalink): Akismet
+    public function withPermalink(string $permalink): Akismet
     {
-        $this->params['permalink'] = $permalink;
-        return $this;
+        return $this->getImmutableWithParam('permalink', $permalink);
     }
 
     /**
@@ -142,82 +145,73 @@ class Akismet
      * message: A message sent between just a few users.
      * You may send a value not listed above if none of them accurately describe your content. This is further explained here: https://blog.akismet.com/2012/06/19/pro-tip-tell-us-your-comment_type/
      */
-    public function setType(string $type): Akismet
+    public function withType(string $type): Akismet
     {
-        $this->params['comment_type'] = $type;
-        return $this;
+        return $this->getImmutableWithParam('comment_type', $type);
     }
 
     /**
      * Name submitted with the comment.
      */
-    public function setAuthorName(string $name): Akismet
+    public function withAuthorName(string $name): Akismet
     {
-        $this->params['comment_author'] = $name;
-        return $this;
+        return $this->getImmutableWithParam('comment_author', $name);
     }
 
     /**
      * Email address submitted with the comment.
      */
-    public function setAuthorEmail(string $email): Akismet
+    public function withAuthorEmail(string $email): Akismet
     {
-        $this->params['comment_author_email'] = $email;
-        return $this;
+        return $this->getImmutableWithParam('comment_author_email', $email);
     }
 
     /*
      * URL submitted with comment. Only send a URL that was manually entered by the user, not an automatically generated URL like the user’s profile URL on your site.
      */
-    public function setAuthorUrl(string $url): Akismet
+    public function withAuthorUrl(string $url): Akismet
     {
-        $this->params['comment_author_url'] = $url;
-        return $this;
+        return $this->getImmutableWithParam('comment_author_url', $url);
     }
 
     /**
      * The content that was submitted.
      */
-    public function setContent(string $content): Akismet
+    public function withContent(string $content): Akismet
     {
-        $this->params['comment_content'] = $content;
-        return $this;
+        return $this->getImmutableWithParam('comment_content', $content);
     }
 
     /**
      * The UTC timestamp of the creation of the comment, in ISO 8601 format. May be omitted for comment-check requests if the comment is sent to the API at the time it is created.
      */
-    public function setDateGmt(string $date): Akismet
+    public function withDateGmt(string $date): Akismet
     {
-        $this->params['comment_date_gmt'] = $date;
-        return $this;
+        return $this->getImmutableWithParam('comment_date_gmt', $date);
     }
 
     /**
      * The UTC timestamp of the publication time for the post, page or thread on which the comment was posted.
      */
-    public function setPostModifiedDateGtm(string $date): Akismet
+    public function withPostModifiedDateGtm(string $date): Akismet
     {
-        $this->params['comment_post_modified_gmt'] = $date;
-        return $this;
+        return $this->getImmutableWithParam('comment_post_modified_gmt', $date);
     }
 
     /**
      * Indicates the language(s) in use on the blog or site, in ISO 639-1 format, comma-separated. A site with articles in English and French might use “en, fr_ca”.
      */
-    public function setLanguage(string $language): Akismet
+    public function withLanguage(string $language): Akismet
     {
-        $this->params['blog_lang'] = $language;
-        return $this;
+        return $this->getImmutableWithParam('blog_lang', $language);
     }
 
     /**
      * This is an optional parameter. You can use it when submitting test queries to Akismet.
      */
-    public function setTest(): Akismet
+    public function withTest(): Akismet
     {
-        $this->params['is_test'] = true;
-        return $this;
+        return $this->getImmutableWithParam('is_test', true);
     }
 
     /**
@@ -225,20 +219,20 @@ class Akismet
      */
     public function setRecheckReason(string $reason): Akismet
     {
-        $this->params['recheck_reason'] = $reason;
-        return $this;
+        return $this->getImmutableWithParam('recheck_reason', $reason);
     }
 
 
     /**
      * Allows you to set additional parameters
      */
-    public function setParams(array $params): Akismet
+    public function withParams(array $params): Akismet
     {
+        $clone = $this;
         if (!empty($params)) {
-            $this->params = array_merge($this->params, $params);
+            $clone->params = array_merge($clone->params, $params);
         }
-        return $this;
+        return $clone;
     }
 }
 

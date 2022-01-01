@@ -34,13 +34,12 @@ class SubmitSpam
 
         if ($post->is_spam) {
             $this->akismet
-                ->setContent($post->content)
-                ->setIp($post->ip_address)
-                ->setAuthorName($post->user->username)
-                ->setAuthorEmail($post->user->email)
-                ->setType($post->number === 1 ? 'forum-post' : 'reply');
-
-            $this->akismet->submitSpam();
+                ->withContent($post->content)
+                ->withIp($post->ip_address)
+                ->withAuthorName($post->user->username)
+                ->withAuthorEmail($post->user->email)
+                ->withType($post->number === 1 ? 'forum-post' : 'reply')
+                ->submitSpam();
         }
     }
 }
