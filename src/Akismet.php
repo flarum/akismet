@@ -85,7 +85,10 @@ class Akismet
         $this->sendRequest('submit-ham');
     }
 
-    private function getImmutableWithParam(string $key, $value): Akismet
+    /**
+     * Allows you to set additional parameter
+     */
+    private function witParam(string $key, $value): Akismet
     {
         $new = clone $this;
         $new->params[$key] = $value;
@@ -98,7 +101,7 @@ class Akismet
      */
     public function withBlog(string $url): Akismet
     {
-        return $this->getImmutableWithParam('blog', $url);
+        return $this->witParam('blog', $url);
     }
 
     /**
@@ -106,7 +109,7 @@ class Akismet
      */
     public function withIp(string $ip): Akismet
     {
-        return $this->getImmutableWithParam('user_ip', $ip);
+        return $this->witParam('user_ip', $ip);
     }
 
     /**
@@ -114,7 +117,7 @@ class Akismet
      */
     public function withUserAgent(string $userAgent): Akismet
     {
-        return $this->getImmutableWithParam('user_agent', $userAgent);
+        return $this->witParam('user_agent', $userAgent);
     }
 
     /**
@@ -122,7 +125,7 @@ class Akismet
      */
     public function withReferrer(string $referrer): Akismet
     {
-        return $this->getImmutableWithParam('referrer', $referrer);
+        return $this->witParam('referrer', $referrer);
     }
 
     /**
@@ -130,7 +133,7 @@ class Akismet
      */
     public function withPermalink(string $permalink): Akismet
     {
-        return $this->getImmutableWithParam('permalink', $permalink);
+        return $this->witParam('permalink', $permalink);
     }
 
     /**
@@ -147,7 +150,7 @@ class Akismet
      */
     public function withType(string $type): Akismet
     {
-        return $this->getImmutableWithParam('comment_type', $type);
+        return $this->witParam('comment_type', $type);
     }
 
     /**
@@ -155,7 +158,7 @@ class Akismet
      */
     public function withAuthorName(string $name): Akismet
     {
-        return $this->getImmutableWithParam('comment_author', $name);
+        return $this->witParam('comment_author', $name);
     }
 
     /**
@@ -163,7 +166,7 @@ class Akismet
      */
     public function withAuthorEmail(string $email): Akismet
     {
-        return $this->getImmutableWithParam('comment_author_email', $email);
+        return $this->witParam('comment_author_email', $email);
     }
 
     /*
@@ -171,7 +174,7 @@ class Akismet
      */
     public function withAuthorUrl(string $url): Akismet
     {
-        return $this->getImmutableWithParam('comment_author_url', $url);
+        return $this->witParam('comment_author_url', $url);
     }
 
     /**
@@ -179,7 +182,7 @@ class Akismet
      */
     public function withContent(string $content): Akismet
     {
-        return $this->getImmutableWithParam('comment_content', $content);
+        return $this->witParam('comment_content', $content);
     }
 
     /**
@@ -187,7 +190,7 @@ class Akismet
      */
     public function withDateGmt(string $date): Akismet
     {
-        return $this->getImmutableWithParam('comment_date_gmt', $date);
+        return $this->witParam('comment_date_gmt', $date);
     }
 
     /**
@@ -195,7 +198,7 @@ class Akismet
      */
     public function withPostModifiedDateGtm(string $date): Akismet
     {
-        return $this->getImmutableWithParam('comment_post_modified_gmt', $date);
+        return $this->witParam('comment_post_modified_gmt', $date);
     }
 
     /**
@@ -203,7 +206,7 @@ class Akismet
      */
     public function withLanguage(string $language): Akismet
     {
-        return $this->getImmutableWithParam('blog_lang', $language);
+        return $this->witParam('blog_lang', $language);
     }
 
     /**
@@ -211,7 +214,7 @@ class Akismet
      */
     public function withTest(): Akismet
     {
-        return $this->getImmutableWithParam('is_test', true);
+        return $this->witParam('is_test', true);
     }
 
     /**
@@ -219,20 +222,7 @@ class Akismet
      */
     public function setRecheckReason(string $reason): Akismet
     {
-        return $this->getImmutableWithParam('recheck_reason', $reason);
-    }
-
-
-    /**
-     * Allows you to set additional parameters
-     */
-    public function withParams(array $params): Akismet
-    {
-        $new = clone $this;
-        if (!empty($params)) {
-            $new->params = array_merge($new->params, $params);
-        }
-        return $new;
+        return $this->witParam('recheck_reason', $reason);
     }
 }
 
