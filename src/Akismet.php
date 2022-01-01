@@ -87,10 +87,10 @@ class Akismet
 
     private function getImmutableWithParam(string $key, $value): Akismet
     {
-        $clone = $this;
-        $clone->params[$key] = $value;
+        $new = clone $this;
+        $new->params[$key] = $value;
 
-        return $clone;
+        return $new;
     }
 
     /**
