@@ -228,11 +228,11 @@ class Akismet
      */
     public function withParams(array $params): Akismet
     {
-        $clone = $this;
+        $new = clone $this;
         if (!empty($params)) {
-            $clone->params = array_merge($clone->params, $params);
+            $new->params = array_merge($new->params, $params);
         }
-        return $clone;
+        return $new;
     }
 }
 
