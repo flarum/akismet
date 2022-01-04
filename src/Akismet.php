@@ -221,7 +221,7 @@ class Akismet
     /**
      * If you are sending content to Akismet to be rechecked, such as a post that has been edited or old pending comments that you’d like to recheck, include the parameter recheck_reason with a string describing why the content is being rechecked. For example, edit.
      */
-    public function setRecheckReason(string $reason): Akismet
+    public function withRecheckReason(string $reason): Akismet
     {
         return $this->withParam('recheck_reason', $reason);
     }
