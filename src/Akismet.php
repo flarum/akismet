@@ -38,11 +38,12 @@ class Akismet
 
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey);
+        return !empty($this->apiKey);
     }
 
     /**
-     * @param  string  $type  e.g. comment-check, submit-spam or submit-ham;
+     * @param string $type e.g. comment-check, submit-spam or submit-ham;
+     *
      * @throws GuzzleException
      */
     protected function sendRequest(string $type): ResponseInterface
